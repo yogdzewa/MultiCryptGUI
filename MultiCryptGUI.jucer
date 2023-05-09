@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="h3AElH" name="MultiCryptGUI" projectType="guiapp" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
+  <MAINGROUP id="Uk4AOz" name="MultiCryptGUI">
+    <GROUP id="{1F57E9D2-7D82-D391-880D-0DBF5D7C1330}" name="MultiCrypt">
+      <FILE id="yE7cvC" name="Affine.h" compile="0" resource="0" file="MultiCryptSrc/Affine.h"/>
+      <FILE id="TddDIr" name="ApplicationDemo.cpp" compile="1" resource="0"
+            file="MultiCryptSrc/ApplicationDemo.cpp"/>
+      <FILE id="M72bNq" name="ApplicationDemo.h" compile="0" resource="0"
+            file="MultiCryptSrc/ApplicationDemo.h"/>
+      <FILE id="fU6dRZ" name="common.cpp" compile="1" resource="0" file="MultiCryptSrc/common.cpp"/>
+      <FILE id="pwkg5O" name="common.h" compile="0" resource="0" file="MultiCryptSrc/common.h"/>
+      <FILE id="kXpsHH" name="des.cpp" compile="1" resource="0" file="MultiCryptSrc/des.cpp"/>
+      <FILE id="DUCEjS" name="des.h" compile="0" resource="0" file="MultiCryptSrc/des.h"/>
+      <FILE id="InxLFE" name="DiffieHellman.h" compile="0" resource="0" file="MultiCryptSrc/DiffieHellman.h"/>
+      <FILE id="TGIsoN" name="LFSR_JK.h" compile="0" resource="0" file="MultiCryptSrc/LFSR_JK.h"/>
+      <FILE id="iPdchz" name="MD5.cpp" compile="1" resource="0" file="MultiCryptSrc/MD5.cpp"/>
+      <FILE id="GNCPzR" name="MD5.h" compile="0" resource="0" file="MultiCryptSrc/MD5.h"/>
+      <FILE id="UXc53B" name="RC4.h" compile="0" resource="0" file="MultiCryptSrc/RC4.h"/>
+      <FILE id="yixnK1" name="RSA16.cpp" compile="1" resource="0" file="MultiCryptSrc/RSA16.cpp"/>
+      <FILE id="VKLUYp" name="RSA16.h" compile="0" resource="0" file="MultiCryptSrc/RSA16.h"/>
+    </GROUP>
+    <GROUP id="{8D18A0B0-0C8B-9B9D-671E-EB6F116D8867}" name="Source">
+      <FILE id="g4yyow" name="DESComponent.h" compile="0" resource="0" file="Source/DESComponent.h"/>
+      <FILE id="d8csHB" name="AffineComponent.h" compile="0" resource="0"
+            file="Source/AffineComponent.h"/>
+      <FILE id="fd0uXI" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="gR2nPF" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="BEcm4z" name="MainComponent.cpp" compile="1" resource="0"
+            file="Source/MainComponent.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+  <EXPORTFORMATS>
+    <CODEBLOCKS_WINDOWS targetFolder="Builds/CodeBlocksWindows">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="MultiCryptGUI"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="MultiCryptGUI"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="E:/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="E:/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="E:/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="E:/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="E:/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="E:/JUCE/modules"/>
+      </MODULEPATHS>
+    </CODEBLOCKS_WINDOWS>
+    <VS2019 targetFolder="Builds/VisualStudio2019">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="MultiCryptGUI" headerPath="../../MultiCryptSrc"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="MultiCryptGUI"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="E:/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="E:/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="E:/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="E:/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="E:/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="E:/JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2019>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+</JUCERPROJECT>
