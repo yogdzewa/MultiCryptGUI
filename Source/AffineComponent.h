@@ -1,9 +1,9 @@
 /*
   ==============================================================================
 
-    AffineComponent.h
-    Created: 5 May 2023 11:03:44pm
-    Author:  L
+	AffineComponent.h
+	Created: 5 May 2023 11:03:44pm
+	Author:  L
 
   ==============================================================================
 */
@@ -11,51 +11,174 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Affine.h"
 
 //==============================================================================
 /*
 */
-class AffineComponent  : public juce::Component
+class AffineComponent : public juce::Component
 {
 public:
-    AffineComponent()
-    {
-        // In your constructor, you should add any child components, and
-        // initialise any special settings that your component needs.
-        setSize(200, 200);
-    }
+	AffineComponent()
+	{
+		// In your constructor, you should add any child components, and
+		// initialise any special settings that your component needs.
+		affineptr = new Affine(1, 1);
+		a = b = 1;
 
-    ~AffineComponent() override
-    {
-    }
+		addAndMakeVisible(leftGroupComponent);
+		addAndMakeVisible(middleGroupComponent);
+		addAndMakeVisible(rightGroupComponent);
 
-    void paint (juce::Graphics& g) override
-    {
-        /* This demo code just fills the component's background and
-           draws some placeholder text to get you started.
+		setButtonCallback();
+	}
 
-           You should replace everything in this method with your own
-           drawing code..
-        */
+	void setButtonCallback() {
+		auto& encButton = middleGroupComponent.encButton;
+		auto& decButton = middleGroupComponent.decButton;
+		auto& leftText = leftGroupComponent.textEditor,
+			& rightText = rightGroupComponent.textEditor;
+		//auto& multiplier = leftGroupComponent.multiplier,
+			//& offset = leftGroupComponent.offset;
 
-        g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));   // clear the background
+		encButton.onClick = [&] {
+			auto plainText = leftText.getText().toStdString();
+			bytes buf(plainText.begin(), plainText.end());
 
-        g.setColour (juce::Colours::grey);
-        g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
+			auto multiplier = leftGroupComponent.multiplier.getText().getIntValue();
+			auto offset = leftGroupComponent.offset.getText().getIntValue();
 
-        g.setColour (juce::Colours::white);
-        g.setFont (14.0f);
-        g.drawText ("AffineComponent", getLocalBounds(),
-                    juce::Justification::centred, true);   // draw some placeholder text
-    }
+			if (multiplier != a || offset != b) {
+				delete affineptr;
+				affineptr = new Affine(multiplier, offset);
+			}
 
-    void resized() override
-    {
-        // This method is where you should set the bounds of any child
-        // components that your component contains..
+			buf = affineptr->encryptBytes(buf);
+			buf = affineptr->decryptBytes(buf);
+			rightGroupComponent.textEditor.setText(juce::String(reinterpret_cast<const char*>(buf.data()), buf.size()));
+		};
 
-    }
+		decButton.onClick = [&] {
+			auto cipherText = rightText.getText().toStdString();
+			bytes buf(cipherText.begin(), cipherText.end());
+			buf = affineptr->decryptBytes(buf);
+			leftText.setText(juce::String((const char*)(buf.data()), buf.size()));
+		};
+	}
+
+	~AffineComponent() override
+	{
+		delete affineptr;
+	}
+
+	void paint(juce::Graphics& g) override
+	{
+		g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));   // clear the background
+
+		g.setColour(juce::Colours::grey);
+		g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
+	}
+
+	void resized() override
+	{
+		juce::Grid grid;
+
+		using Track = juce::Grid::TrackInfo;
+		using Fr = juce::Grid::Fr;
+
+		grid.columnGap = juce::Grid::Px(6);
+		grid.templateRows = { Track(Fr(1)) };
+		grid.templateColumns = { Track(Fr(3)), Track(Fr(1)), Track(Fr(3)) };
+		grid.items = { juce::GridItem(leftGroupComponent),
+				juce::GridItem(middleGroupComponent).withHeight(150).withAlignSelf(juce::GridItem::AlignSelf::center),
+				juce::GridItem(rightGroupComponent) };
+
+		grid.performLayout(getLocalBounds().reduced(6));
+	}
 
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AffineComponent)
+
+	struct LeftGroupComponent : public juce::GroupComponent
+	{
+		LeftGroupComponent() {
+			setText("Plain Text");
+			addAndMakeVisible(textEditor);
+			addAndMakeVisible(multiplier);
+			addAndMakeVisible(offset);
+
+			multiplier.setEditable(true);
+			offset.setEditable(true);
+
+			juce::Font font{ "Consolas", 18.0f, juce::Font::plain };
+			textEditor.setFont(font);
+			textEditor.setText("input plain text here");
+			textEditor.setMultiLine(true);
+		}
+
+		void resized() override {
+			auto b = getLocalBounds().withTrimmedTop(10).reduced(10);
+			offset.setBounds(b.removeFromBottom(50).reduced(5));
+			multiplier.setBounds(b.removeFromBottom(50).reduced(5));
+			textEditor.setBounds(b.reduced(5));
+		}
+
+		juce::Label multiplier{ {}, "1" };
+		juce::Label offset{ {}, "1" };
+		juce::TextEditor textEditor;
+	};
+
+	struct MiddleGroupComponent : public juce::GroupComponent
+	{
+		MiddleGroupComponent() {
+			setText("Operations");
+			addAndMakeVisible(encButton);
+			addAndMakeVisible(decButton);
+			encButton.setButtonText("ENCRYPT >");
+			decButton.setButtonText("DECRYPT <");
+		}
+
+		void resized() override {
+			juce::Grid g;
+			using Track = juce::Grid::TrackInfo;
+			using Fr = juce::Grid::Fr;
+			g.templateRows = { Track(Fr(1)), Track(Fr(1)) };
+			g.templateColumns = { Track(Fr(1)) };
+			g.items = { juce::GridItem(encButton),
+				juce::GridItem(decButton) };
+			g.setGap(juce::Grid::Px(5));
+			g.performLayout(getLocalBounds().withTrimmedTop(8).reduced(10));
+		}
+
+		juce::TextButton encButton, decButton;
+	};
+
+	struct RightGroupComponent : public juce::GroupComponent
+	{
+		RightGroupComponent() {
+			setText("Cipher Text");
+			addAndMakeVisible(textEditor);
+
+			textEditor.setMultiLine(true);
+			juce::Font font{ "Consolas", 18.0f, juce::Font::plain };
+			textEditor.setFont(font);
+			textEditor.setText("input cipher text here");
+		}
+
+		void resized() {
+			auto b = getLocalBounds().reduced(15).withTrimmedTop(8);
+			textEditor.setBounds(b);
+		}
+
+		juce::TextEditor textEditor;
+
+	};
+
+	Affine* affineptr;
+	int a, b;
+
+	LeftGroupComponent leftGroupComponent;
+	MiddleGroupComponent middleGroupComponent;
+	RightGroupComponent rightGroupComponent;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AffineComponent)
 };

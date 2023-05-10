@@ -113,7 +113,7 @@ public:
 
 private:
 
-	struct LeftGroupComponent : public juce::GroupComponent
+	struct LeftGroupComponent : public juce::GroupComponent, public juce::FilenameComponentListener
 	{
 		LeftGroupComponent() {
 			setText("Plain Text");
@@ -126,6 +126,16 @@ private:
 			textEditor.setFont(font);
 			textEditor.setText("input plain text here");
 			textEditor.setMultiLine(true);
+			fileChooser.addListener(this);
+		}
+
+		void filenameComponentChanged(juce::FilenameComponent* comp) {
+			if (comp != &fileChooser)
+				return;
+			auto name = comp->getCurrentFile();
+			juce::StringArray content;
+			name.readLines(content);
+			keyLable.setText(content[0], juce::NotificationType::dontSendNotification);
 		}
 
 		void resized() override {
