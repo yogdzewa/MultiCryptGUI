@@ -121,6 +121,10 @@ private:
 			addAndMakeVisible(fileChooser);
 
 			keyLabel.setEditable(true);
+			keyLabel2.setEditable(true);
+			keyLabel3.setEditable(true);
+			keyLabel4.setEditable(true);
+			keyLabel5.setEditable(true);
 			keyLabel.setColour(juce::Label::outlineColourId, juce::Colours::white);
 
 			juce::Font font{ "Consolas", 18.0f, juce::Font::plain };
