@@ -29,11 +29,7 @@ public:
 		setButtonCallback();
 	}
 
-	void setButtonCallback() {
-		auto& encButton = middleGroupComponent.encButton,
-			& decButton = middleGroupComponent.decButton;
-		auto& leftText = leftGroupComponent.textEditor,
-			& rightText = rightGroupComponent.textEditor;
+	bytes getKey(bytes input) {
 		auto& genType = middleGroupComponent.genType;
 		auto& keyLabel = leftGroupComponent.keyLabel,
 			& keyLabel2 = leftGroupComponent.keyLabel2,
@@ -41,58 +37,47 @@ public:
 			& keyLabel4 = leftGroupComponent.keyLabel4,
 			& keyLabel5 = leftGroupComponent.keyLabel5;
 
+		bytes keyBytes;
+		if (genType.getToggleState()) {
+			rc4_ptr.reset(new RC4());
+			rc4_ptr->permuteSbox(stringToBytes(keyLabel.getText().toStdString()));
+			keyBytes = rc4_ptr->generateRandBytes(input.size());
+		}
+		else {
+			bits lfsr1_feedback, lfsr1_initial, lfsr2_feedback, lfsr2_initial;
+			bit jk_initial;
+			lfsr1_feedback = stringToBytes(keyLabel.getText().toStdString());
+			lfsr1_initial = stringToBytes(keyLabel2.getText().toStdString());
+			lfsr2_feedback = stringToBytes(keyLabel3.getText().toStdString());
+			lfsr2_initial = stringToBytes(keyLabel4.getText().toStdString());
+			jk_initial = keyLabel5.getText().getIntValue();
+
+			lfsr_jk_ptr.reset(new LFSR_JK(lfsr1_feedback, lfsr1_initial, lfsr2_feedback, lfsr2_initial, jk_initial));
+			keyBytes = lfsr_jk_ptr->keyStreamBytes(input.size());
+		}
+		return keyBytes;
+	}
+
+	void setButtonCallback() {
+		auto& encButton = middleGroupComponent.encButton,
+			& decButton = middleGroupComponent.decButton;
+		auto& leftText = leftGroupComponent.textEditor,
+			& rightText = rightGroupComponent.textEditor;
+
 		encButton.onClick = [&] {
 			auto plainText = leftText.getText().toStdString();
 			bytes plainBytes(stringToBytes(plainText));
-			bytes keyBytes;
 			auto keyText = leftGroupComponent.keyLabel.getText();
 
-			if (genType.getToggleState()) {
-				rc4_ptr.reset(new RC4());
-				rc4_ptr->permuteSbox(stringToBytes(keyText.toStdString()));
-				keyBytes = rc4_ptr->generateRandBytes(plainBytes.size());
-			}
-			else {
-				bits lfsr1_feedback, lfsr1_initial, lfsr2_feedback, lfsr2_initial;
-				bit jk_initial;
-				lfsr1_feedback = stringToBytes(keyLabel.getText().toStdString());
-				lfsr1_initial = stringToBytes(keyLabel2.getText().toStdString());
-				lfsr2_feedback = stringToBytes(keyLabel3.getText().toStdString());
-				lfsr2_initial = stringToBytes(keyLabel4.getText().toStdString());
-				jk_initial = keyLabel5.getText().getIntValue();
-
-				lfsr_jk_ptr.reset(new LFSR_JK(lfsr1_feedback, lfsr1_initial, lfsr2_feedback, lfsr2_initial, jk_initial));
-				keyBytes = lfsr_jk_ptr->keyStreamBytes(plainBytes.size());
-			}
-
-			bytes buf = xorBytes(keyBytes, plainBytes);
+			bytes buf = xorBytes(getKey(plainBytes), plainBytes);
 			rightGroupComponent.textEditor.setText(bytesToHexdump(buf));
 		};
 
 		decButton.onClick = [&] {
 			auto cipherText = rightText.getText().toStdString();
 			bytes cipherBytes(hexdumpToBytes(cipherText));
-			bytes keyBytes;
 
-			if (genType.getToggleState()) {
-				bytes seedKeyBytes(stringToBytes(keyLabel.getText().toStdString()));
-				rc4_ptr.reset(new RC4());
-				rc4_ptr->permuteSbox(seedKeyBytes);
-				keyBytes = rc4_ptr->generateRandBytes(cipherBytes.size());
-			}
-			else {
-				bits lfsr1_feedback, lfsr1_initial, lfsr2_feedback, lfsr2_initial;
-				bit jk_initial;
-				lfsr1_feedback = stringToBytes(keyLabel.getText().toStdString());
-				lfsr1_initial = stringToBytes(keyLabel2.getText().toStdString());
-				lfsr2_feedback = stringToBytes(keyLabel3.getText().toStdString());
-				lfsr2_initial = stringToBytes(keyLabel4.getText().toStdString());
-				jk_initial = keyLabel5.getText().getIntValue();
-				lfsr_jk_ptr.reset(new LFSR_JK(lfsr1_feedback, lfsr1_initial, lfsr2_feedback, lfsr2_initial, jk_initial));
-				keyBytes = lfsr_jk_ptr->keyStreamBytes(cipherBytes.size());
-			}
-
-			bytes buf = xorBytes(keyBytes, cipherBytes);
+			bytes buf = xorBytes(getKey(cipherBytes), cipherBytes);
 			leftGroupComponent.textEditor.setText(bytesToString(buf));
 		};
 	}
