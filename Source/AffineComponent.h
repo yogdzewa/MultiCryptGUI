@@ -12,6 +12,7 @@
 
 #include <JuceHeader.h>
 #include "Affine.h"
+#include "common.h"
 
 //==============================================================================
 /*
@@ -23,7 +24,7 @@ public:
 	{
 		// In your constructor, you should add any child components, and
 		// initialise any special settings that your component needs.
-		affineptr = new Affine(1, 1);
+		affineptr.reset(new Affine(1, 1));
 		a = b = 1;
 
 		addAndMakeVisible(leftGroupComponent);
@@ -38,37 +39,28 @@ public:
 		auto& decButton = middleGroupComponent.decButton;
 		auto& leftText = leftGroupComponent.textEditor,
 			& rightText = rightGroupComponent.textEditor;
-		//auto& multiplier = leftGroupComponent.multiplier,
-			//& offset = leftGroupComponent.offset;
 
 		encButton.onClick = [&] {
 			auto plainText = leftText.getText().toStdString();
-			bytes buf(plainText.begin(), plainText.end());
+			bytes buf(stringToBytes(plainText));
 
 			auto multiplier = leftGroupComponent.multiplier.getText().getIntValue();
 			auto offset = leftGroupComponent.offset.getText().getIntValue();
 
 			if (multiplier != a || offset != b) {
-				delete affineptr;
-				affineptr = new Affine(multiplier, offset);
+				affineptr.reset(new Affine(multiplier, offset));
 			}
 
 			buf = affineptr->encryptBytes(buf);
-			buf = affineptr->decryptBytes(buf);
 			rightGroupComponent.textEditor.setText(juce::String(reinterpret_cast<const char*>(buf.data()), buf.size()));
 		};
 
 		decButton.onClick = [&] {
 			auto cipherText = rightText.getText().toStdString();
-			bytes buf(cipherText.begin(), cipherText.end());
+			bytes buf(stringToBytes(cipherText));
 			buf = affineptr->decryptBytes(buf);
 			leftText.setText(juce::String((const char*)(buf.data()), buf.size()));
 		};
-	}
-
-	~AffineComponent() override
-	{
-		delete affineptr;
 	}
 
 	void paint(juce::Graphics& g) override
@@ -108,6 +100,8 @@ private:
 
 			multiplier.setEditable(true);
 			offset.setEditable(true);
+			multiplier.setColour(juce::Label::outlineColourId, juce::Colours::white);
+			offset.setColour(juce::Label::outlineColourId, juce::Colours::white);
 
 			juce::Font font{ "Consolas", 18.0f, juce::Font::plain };
 			textEditor.setFont(font);
@@ -173,7 +167,7 @@ private:
 
 	};
 
-	Affine* affineptr;
+	std::unique_ptr<Affine> affineptr;
 	int a, b;
 
 	LeftGroupComponent leftGroupComponent;

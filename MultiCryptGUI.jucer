@@ -27,6 +27,8 @@
             file="Source/AffineComponent.h"/>
       <FILE id="fd0uXI" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="gR2nPF" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="l4SXtv" name="StreamComponent.h" compile="0" resource="0"
+            file="Source/StreamComponent.h"/>
       <FILE id="BEcm4z" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
     </GROUP>

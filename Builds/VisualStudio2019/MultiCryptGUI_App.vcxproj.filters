@@ -1638,6 +1638,9 @@
     <ClInclude Include="..\..\Source\MainComponent.h">
       <Filter>MultiCryptGUI\Source</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\StreamComponent.h">
+      <Filter>MultiCryptGUI\Source</Filter>
+    </ClInclude>
     <ClInclude Include="E:\JUCE\modules\juce_core\containers\juce_AbstractFifo.h">
       <Filter>JUCE Modules\juce_core\containers</Filter>
     </ClInclude>

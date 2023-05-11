@@ -46,6 +46,8 @@ public:
 	}
 	static uint32_t modinv(uint32_t a, uint32_t mod)
 	{
+		if ( a == 1 )
+			return 1;
 		Tuple A = { mod, 0, 1 };
 		Tuple B = { a, 1, 0 };
 		Tuple C;

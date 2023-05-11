@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 #include "AffineComponent.h"
 #include "DESComponent.h"
+#include "StreamComponent.h"
 
 //==============================================================================
 /*
@@ -24,12 +25,7 @@ private:
     //==============================================================================
     // Your private member variables go here...
     int width = 1200, height = 800;
-
     juce::TabbedComponent tabbed{juce::TabbedButtonBar::TabsAtTop};
-    AffineComponent affineComponent;
-    DESComponent desComponent;
-
-
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

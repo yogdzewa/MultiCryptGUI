@@ -8,6 +8,7 @@ MainComponent::MainComponent()
 	tabbed.setSize(getWidth(), getHeight());
 	tabbed.setColour(juce::TabbedButtonBar::tabTextColourId, juce::Colours::grey);
 
+	tabbed.addTab("Stream", juce::Colours::darkgrey, new StreamComponent(), false);
 	tabbed.addTab("DES", juce::Colours::darkgrey, new DESComponent(), false);
 	tabbed.addTab("Affine", juce::Colours::darkgrey, new AffineComponent(), false);
 

@@ -43,7 +43,7 @@ public:
 			auto plainText = leftText.getText().toStdString();
 			bytes buf(plainText.begin(), plainText.end());
 
-			auto keyText = leftGroupComponent.keyLable.getText().toStdString();
+			auto keyText = leftGroupComponent.keyLabel.getText().toStdString();
 			bytes keyBytes;
 			juce::StringArray tokens;
 			tokens.addTokens(keyText, " ", "");
@@ -117,11 +117,11 @@ private:
 	{
 		LeftGroupComponent() {
 			setText("Plain Text");
-			addAndMakeVisible(keyLable);
+			addAndMakeVisible(keyLabel);
 			addAndMakeVisible(textEditor);
 			addAndMakeVisible(fileChooser);
 
-			keyLable.setEditable(true);
+			keyLabel.setEditable(true);
 			juce::Font font{ "Consolas", 18.0f, juce::Font::plain };
 			textEditor.setFont(font);
 			textEditor.setText("input plain text here");
@@ -135,18 +135,18 @@ private:
 			auto name = comp->getCurrentFile();
 			juce::StringArray content;
 			name.readLines(content);
-			keyLable.setText(content[0], juce::NotificationType::dontSendNotification);
+			keyLabel.setText(content[0], juce::NotificationType::dontSendNotification);
 		}
 
 		void resized() override {
 			auto b = getLocalBounds().withTrimmedTop(10).reduced(10);
 			fileChooser.setBounds(b.removeFromBottom(40).reduced(5));
-			keyLable.setBounds(b.removeFromBottom(200).reduced(5));
-			keyLable.setColour(juce::Label::outlineColourId, juce::Colours::white);
+			keyLabel.setBounds(b.removeFromBottom(200).reduced(5));
+			keyLabel.setColour(juce::Label::outlineColourId, juce::Colours::white);
 			textEditor.setBounds(b.reduced(5));
 		}
 
-		juce::Label keyLable{ {}, "00 00 00 00 00 00 00 00" };
+		juce::Label keyLabel{ {}, "00 00 00 00 00 00 00 00" };
 		juce::TextEditor textEditor;
 		juce::FilenameComponent fileChooser{ "File", {}, true, false, false, "*.txt;*.xml;*.yml;", {},
 										"choose a file as key..." };

@@ -11,6 +11,11 @@ class Affine
 	struct Tuple { int32_t number; int32_t identity1; int32_t identity2; };
 	static int32_t mod256Inverse(uint32_t n)
 	{
+		//special case
+		if ( n == 1 )
+			return 1;
+		
+		
 		Tuple A = { 256, 0, 1 };
 		Tuple B = { n, 1, 0 };
 		Tuple C;
