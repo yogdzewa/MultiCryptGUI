@@ -141,7 +141,7 @@ private:
 		void resized() override {
 			auto b = getLocalBounds().withTrimmedTop(10).reduced(10);
 			fileChooser.setBounds(b.removeFromBottom(40).reduced(5));
-			keyLabel.setBounds(b.removeFromBottom(200).reduced(5));
+			keyLabel.setBounds(b.removeFromBottom(50).reduced(5));
 			keyLabel.setColour(juce::Label::outlineColourId, juce::Colours::white);
 			textEditor.setBounds(b.reduced(5));
 		}

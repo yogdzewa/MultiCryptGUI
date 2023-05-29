@@ -180,7 +180,7 @@ private:
 			juce::Grid g;
 			using Track = juce::Grid::TrackInfo;
 			using Fr = juce::Grid::Fr;
-			g.templateRows = { Track(Fr(4)), Track(Fr(4)), Track(Fr(1)) };
+			g.templateRows = { Track(Fr(8)), Track(Fr(8)), Track(Fr(2)) };
 			g.templateColumns = { Track(Fr(1)) };
 			g.items = { juce::GridItem(encButton),
 				juce::GridItem(decButton), juce::GridItem(genType) };
