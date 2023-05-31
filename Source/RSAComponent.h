@@ -41,8 +41,12 @@ public:
 	void setButtonCallback() {
 		auto& encButton = middleGroupComponent.encButton;
 		auto& decButton = middleGroupComponent.decButton;
+		auto& reKeyButton = middleGroupComponent.reKeyButton;
 		auto& leftText = leftGroupComponent.textEditor,
 			& rightText = rightGroupComponent.textEditor;
+		auto& NLabel = leftGroupComponent.NLabel;
+		auto& ELabel = leftGroupComponent.ELabel;
+		auto& DLabel = leftGroupComponent.DLabel;
 
 		
 		encButton.onClick = [&] {
@@ -90,6 +94,18 @@ public:
 			//uint8 -> string
 			leftText.setText(bytesToString(buf_uint8));
 		};
+
+		reKeyButton.onClick = [&] {
+			delete rsaptr;
+			rsaptr = new RSA16();
+			N = rsaptr->getN();
+			E = rsaptr->getE();
+			D = rsaptr->getD();
+			NLabel.setText(std::to_string(N), juce::NotificationType::dontSendNotification);
+			ELabel.setText(std::to_string(E), juce::NotificationType::dontSendNotification);
+			DLabel.setText(std::to_string(D), juce::NotificationType::dontSendNotification);
+		};
+
 	}
 
 	~RSAComponent() override {
@@ -180,23 +196,25 @@ private:
 			setText("Operations");
 			addAndMakeVisible(encButton);
 			addAndMakeVisible(decButton);
+			addAndMakeVisible(reKeyButton);
 			encButton.setButtonText("ENCRYPT >");
 			decButton.setButtonText("DECRYPT <");
+			reKeyButton.setButtonText("= Regenerate Key =");
 		}
 
 		void resized() override {
 			juce::Grid g;
 			using Track = juce::Grid::TrackInfo;
 			using Fr = juce::Grid::Fr;
-			g.templateRows = { Track(Fr(1)), Track(Fr(1)) };
+			g.templateRows = { Track(Fr(1)), Track(Fr(1)),Track(Fr(1))};
 			g.templateColumns = { Track(Fr(1)) };
 			g.items = { juce::GridItem(encButton),
-				juce::GridItem(decButton) };
+				juce::GridItem(decButton),juce::GridItem(reKeyButton)};
 			g.setGap(juce::Grid::Px(5));
 			g.performLayout(getLocalBounds().withTrimmedTop(8).reduced(10));
 		}
 
-		juce::TextButton encButton, decButton;
+		juce::TextButton encButton, decButton, reKeyButton;
 	};
 
 	struct RightGroupComponent : public juce::GroupComponent

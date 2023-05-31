@@ -151,6 +151,13 @@ public:
 		D = i.D;
 	}
 
+	uint16_t getN() { return N; }
+	uint16_t getE() { return E; }
+	uint16_t getD() { return D; }
+	void setN(const uint16_t t) { N = t; }
+	void setE(const uint16_t e) { E = e; }
+	void setD(const uint16_t d) { D = d; }
+
 	//b^exp mod N
 	template <class inputType, class outputType>
 	outputType raise(inputType b, uint16_t exponent) const
