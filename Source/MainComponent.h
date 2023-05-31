@@ -4,6 +4,7 @@
 #include "AffineComponent.h"
 #include "DESComponent.h"
 #include "StreamComponent.h"
+#include "RSAComponent.h"
 
 //==============================================================================
 /*

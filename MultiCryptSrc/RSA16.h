@@ -133,6 +133,13 @@ public:
 		D = k.D;
 	}
 
+	RSA16(const uint16_t a,const uint16_t b,const uint16_t c)
+	{
+		N = a;
+		E = b;
+		D = c;
+	}
+
 	//Create an instance for both encryption and decryption from AllInfo.
 	RSA16(const AllInfo& i)
 	{
