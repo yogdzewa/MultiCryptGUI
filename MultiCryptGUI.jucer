@@ -32,6 +32,8 @@
       <FILE id="e4mxJl" name="RSAComponent.h" compile="0" resource="0" file="Source/RSAComponent.h"/>
       <FILE id="BEcm4z" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
+      <FILE id="uKGi2w" name="DH.h" compile="0" resource="0" file="Source/DH.h"/>
+      <FILE id="Zr5Nlb" name="DH.cpp" compile="1" resource="0" file="Source/DH.cpp"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>

@@ -8,10 +8,11 @@ MainComponent::MainComponent()
 	tabbed.setSize(getWidth(), getHeight());
 	tabbed.setColour(juce::TabbedButtonBar::tabTextColourId, juce::Colours::grey);
 
+	tabbed.addTab("Affine", juce::Colours::darkgrey, new AffineComponent(), false);
 	tabbed.addTab("Stream", juce::Colours::darkgrey, new StreamComponent(), false);
 	tabbed.addTab("DES", juce::Colours::darkgrey, new DESComponent(), false);
-	tabbed.addTab("Affine", juce::Colours::darkgrey, new AffineComponent(), false);
 	tabbed.addTab("RSA", juce::Colours::darkgrey, new RSAComponent(), false);
+	tabbed.addTab("DH", juce::Colours::darkgrey, new DH(), false);
 }
 
 MainComponent::~MainComponent() {}

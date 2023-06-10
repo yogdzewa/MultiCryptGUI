@@ -5,6 +5,7 @@
 #include "DESComponent.h"
 #include "StreamComponent.h"
 #include "RSAComponent.h"
+#include "DH.h"
 
 //==============================================================================
 /*

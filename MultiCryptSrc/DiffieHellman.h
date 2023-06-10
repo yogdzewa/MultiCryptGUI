@@ -21,7 +21,7 @@ public:
 
 	uint32_t generatePubkey() {
 		srand(time(NULL));
-		generatePubkey(rand() % n);
+		return generatePubkey(rand() % n);
 	}
 
 	uint32_t generateSharedKey(uint32_t pubkey_from_other_peer) {
