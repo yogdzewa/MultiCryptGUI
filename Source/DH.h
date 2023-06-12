@@ -19,21 +19,18 @@
 
 //==============================================================================
 void server(bool, void*);
-void clientSockSetup(void*);
+void clientSockSetup(void*, std::string, int);
 
 class DH : public juce::Component
 {
 public:
 	DH()
 	{
-		addAndMakeVisible(leftComp);
+		//addAndMakeVisible(leftComp);
 		addAndMakeVisible(rightComp);
 	}
 
-	~DH() override {
-		//closesocket(rightComp.clientSock);
-		//std::terminate();
-	}
+	~DH() override {}
 
 	void paint(juce::Graphics& g) override
 	{
@@ -51,10 +48,10 @@ public:
 
 		grid.columnGap = juce::Grid::Px(6);
 		grid.templateRows = { Track(Fr(1)) };
-		grid.templateColumns = { Track(Fr(3)),Track(Fr(3)) };
-		grid.items = { juce::GridItem(leftComp), juce::GridItem(rightComp) };
+		grid.templateColumns = { Track(Fr(3)) };
+		grid.items = { /*juce::GridItem(leftComp)*/ juce::GridItem(rightComp) };
 
-		grid.performLayout(getLocalBounds().reduced(6));
+		grid.performLayout(getLocalBounds().withTrimmedLeft(320).withTrimmedRight(320).reduced(6));
 	}
 
 	struct LeftGroupComponent : public juce::GroupComponent {
@@ -111,19 +108,22 @@ public:
 			setText("Client");
 			addAndMakeVisible(textEditor);
 			addAndMakeVisible(sendButton);
-			keyLabel1.setEditable(true);
-			keyLabel2.setEditable(true);
+			addAndMakeVisible(Label1);
+			addAndMakeVisible(Label2);
+			Label1.setEditable(true);
+			Label2.setEditable(true);
 
 			sendButton.setButtonText("Send Key");
 			keyLabel1.setColour(juce::Label::outlineColourId, juce::Colours::white);
 			keyLabel2.setColour(juce::Label::outlineColourId, juce::Colours::white);
 			textEditor.setColour(juce::Label::outlineColourId, juce::Colours::white);
 
-			clientSockSetup(this);
-
 			sendButton.onClick = [&] {
-				uint32_t g = std::stoul(p->leftComp.keyLabel.getText().toStdString()),
-					n = std::stoul(p->leftComp.keyLabel2.getText().toStdString());
+				auto ip = Label1.getText().toStdString();
+				auto port = std::stoi(Label2.getText().toStdString());
+				if (clientSock == 0)
+					clientSockSetup(this, ip, port);
+				uint32_t g = 13, n = 53;
 				client_dh.initAgreement(g, n);
 				auto pubkey = client_dh.generatePubkey();
 				juce::String s(pubkey);
@@ -138,16 +138,18 @@ public:
 
 		void resized() {
 			auto b = getLocalBounds().withTrimmedTop(10).reduced(10);
-			keyLabel2.setBounds(b.removeFromBottom(30).reduced(5));
-			keyLabel1.setBounds(b.removeFromBottom(30).reduced(5));
+			Label2.setBounds(b.removeFromBottom(30).reduced(5));
+			Label1.setBounds(b.removeFromBottom(30).reduced(5));
 			sendButton.setBounds(b.removeFromBottom(60).reduced(5));
 			textEditor.setBounds(b);
 		}
 
 		DH* p;
 		char buffer[128];
-		SOCKET clientSock;
+		SOCKET clientSock = 0;
 		DiffieHellman client_dh;
+		juce::Label Label1{ {}, "127.0.0.1" };
+		juce::Label Label2{ {}, "13370" };
 		juce::Label keyLabel1{ {}, "" };
 		juce::Label keyLabel2{ {}, "" };
 		juce::Label textEditor;

@@ -47,7 +47,7 @@ void server(bool flag, void* _t) {
 }
 
 
-void clientSockSetup(void* _t) {
+void clientSockSetup(void* _t, std::string ip, int port) {
 	auto t = reinterpret_cast<DH::RightGroupComponent*>(_t);
 	WSADATA wsaData;
 	int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -58,8 +58,8 @@ void clientSockSetup(void* _t) {
 	ConnectSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
 	clientService.sin_family = AF_INET;
-	clientService.sin_addr.s_addr = inet_addr("127.0.0.1");
-	clientService.sin_port = htons(13370);
+	clientService.sin_addr.s_addr = inet_addr(ip.c_str());
+	clientService.sin_port = htons(port);
 
 	connect(ConnectSocket, (SOCKADDR*)&clientService, sizeof(clientService));
 }
